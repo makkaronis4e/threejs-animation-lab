@@ -9,12 +9,18 @@ body {
 
 }
 
-.wrapper {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 40px;
-}
-
 canvas {
 	display: block;
+}
+
+.controls {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+
+form {
+	display: inline-block;
+	margin-left: 20px;
 }
