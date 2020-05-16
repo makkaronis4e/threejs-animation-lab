@@ -10,14 +10,22 @@
 	</head>
 	<body>
 		<div class="controls">
-			<button type="button" id="animateButton" class="btn btn-primary">Animate objects</button>
-			<button type="button" id="cancelAnimationButton" class="btn btn-danger" disabled="disabled">Stop animation</button>
 			<form>
 				<div class="form-check">
-				  <input type="checkbox" class="form-check-input" id="camera" >
+				  <input type="checkbox" class="form-check-input" id="camera">
 				  <label class="form-check-label" for="camera" style="color: aliceblue;">Auto-rotate camera</label>
 				</div>
-			  </form>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="obj" checked>
+					<label class="form-check-label" for="obj" style="color: aliceblue;">Auto-rotate objects</label>
+				</div>
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="light">
+					<label class="form-check-label" for="obj" style="color: aliceblue;">Auto-rotate light</label>
+				</div>
+			</form>
+			<button type="button" id="animateButton" class="btn btn-primary">Animate objects</button>
+			<button type="button" id="cancelAnimationButton" class="btn btn-danger" disabled="disabled">Stop animation</button>
 		</div>
 			<script src="main.js"></script>
     </body>

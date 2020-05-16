@@ -1,24 +1,17 @@
-var camera, scene, renderer, controls;
-var mesh;
-var THREE;
-var OrbitControls;
+var camera, scene, renderer, controls, light, mesh, THREE, OrbitControls, animationActive, animateCamera;
 const objects = [];
-let animationActive;
 
 init();
-// animate();
 
 function init() {
   initDomFunc();
 
-  camera = new THREE.PerspectiveCamera(
-    70,
-    window.innerWidth / window.innerHeight,
-    1,
-    1000
-  );
+  const fov = 70;
+  const aspect = window.innerWidth / window.innerHeight;
+  const near = 1;
+  const far = 1000;
+  camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.position.z = 400;
-  const spread = 10;
   scene = new THREE.Scene();
 
   //Cube
@@ -52,7 +45,7 @@ function init() {
   window.addEventListener("resize", onWindowResize, false);
 
   function addFilledGeometry(geometry, x, y) {
-    const material = new THREE.MeshBasicMaterial({ color: 0x805e9c });
+    const material = new THREE.MeshPhongMaterial({ color: 0xe4c657 });
     const mesh = new THREE.Mesh(geometry, material);
     addObjectToScene(mesh, x, y);
   }
@@ -64,11 +57,18 @@ function init() {
   }
 
   function addObjectToScene(obj, x, y) {
-    obj.position.x = x * spread;
-    obj.position.y = y * spread;
+    obj.position.x = x * 10;
+    obj.position.y = y * 10;
     scene.add(obj);
     objects.push(obj);
   }
+
+  light = new THREE.PointLight(0xFFFFFF, 2);
+  light.position.set(-240, 150, 0);
+  scene.add(light);
+
+  const helper = new THREE.PointLightHelper(light, 10);
+  scene.add(helper);
 
   render();
 }
@@ -91,13 +91,20 @@ function animate() {
     });
     requestAnimationFrame(animate);
     controls.update();
+
+    if (animateCamera) {
+      light.position.y = 250 * Math.sin(Date.now() / 640);
+      light.position.z = 150 * Math.cos(Date.now() / 640);
+    }
   }
   render();
-  checkRotation();
+  //checkRotation();
 }
 
 function initDomFunc() {
   const animateButton = document.getElementById("animateButton");
+  const cameraCheckbox = document.getElementById("camera");
+  const lightCheckbox = document.getElementById("light");
   const cancelAnimationButton = document.getElementById(
     "cancelAnimationButton"
   );
@@ -114,6 +121,22 @@ function initDomFunc() {
     animationActive = false;
     animate();
   });
+
+  cameraCheckbox.addEventListener("change", (event) => {
+      if (event.target.checked) {
+        controls.autoRotate = true;
+      } else {
+        controls.autoRotate = false;
+      }
+  });
+
+  lightCheckbox.addEventListener("change", (event) => {
+    if (event.target.checked) {
+      animateCamera = true;
+    } else {
+      animateCamera = false;
+    }
+});
 }
 
 function initControl() {
@@ -122,27 +145,32 @@ function initControl() {
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
   controls.minDistance = 100;
-  controls.maxDistance = 500;
+  controls.maxDistance = 800;
   controls.maxPolarAngle = Math.PI / 2;
   controls.addEventListener("change", render);
 
   controls.center = new THREE.Vector3(0, 0, 0);
-  controls.autoRotate = true;
 }
 
-function checkRotation() {
-  const rotSpeed = 0.9;
-  const x = camera.position.x,
-    y = camera.position.y,
-    z = camera.position.z;
 
-  if (keyboard.pressed("left")) {
-    camera.position.x = x * Math.cos(rotSpeed) + z * Math.sin(rotSpeed);
-    camera.position.z = z * Math.cos(rotSpeed) - x * Math.sin(rotSpeed);
-  } else if (keyboard.pressed("right")) {
-    camera.position.x = x * Math.cos(rotSpeed) - z * Math.sin(rotSpeed);
-    camera.position.z = z * Math.cos(rotSpeed) + x * Math.sin(rotSpeed);
-  }
 
-  camera.lookAt(scene.position);
-}
+
+// For control over camera rotation
+
+
+// function checkRotation() {
+//   const rotSpeed = 0.9;
+//   const x = camera.position.x,
+//     y = camera.position.y,
+//     z = camera.position.z;
+
+//   if (keyboard.pressed("left")) {
+//     camera.position.x = x * Math.cos(rotSpeed) + z * Math.sin(rotSpeed);
+//     camera.position.z = z * Math.cos(rotSpeed) - x * Math.sin(rotSpeed);
+//   } else if (keyboard.pressed("right")) {
+//     camera.position.x = x * Math.cos(rotSpeed) - z * Math.sin(rotSpeed);
+//     camera.position.z = z * Math.cos(rotSpeed) + x * Math.sin(rotSpeed);
+//   }
+
+//   camera.lookAt(scene.position);
+// }

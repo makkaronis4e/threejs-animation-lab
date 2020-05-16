@@ -18,9 +18,16 @@ canvas {
 	top: 0;
 	left: 0;
 	right: 0;
+	padding: 14px;
+	display: flex;
+	align-items: center;
 }
 
 form {
 	display: inline-block;
-	margin-left: 20px;
+	margin: 0 20px;
+}
+
+.btn {
+	margin-right: 10px;
 }
