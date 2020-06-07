@@ -6,6 +6,8 @@ init();
 function init() {
   initDomFunc();
 
+
+  // scene
   const fov = 70;
   const aspect = window.innerWidth / window.innerHeight;
   const near = 1;
@@ -14,12 +16,12 @@ function init() {
   camera.position.z = 400;
   scene = new THREE.Scene();
 
-  //Cube
+  // Cube
   const width = 100;
   const height = 100;
   const depth = 100;
   const cubeGeometry = new THREE.BoxBufferGeometry(width, height, depth);
-  addLinedGeometry(new THREE.EdgesGeometry(cubeGeometry), 15, 0);
+  addLineGeometry(new THREE.EdgesGeometry(cubeGeometry), 15, 0);
 
   // Torus
   const radius = 50;
@@ -34,8 +36,8 @@ function init() {
   );
   addFilledGeometry(torusGeometry, -25, 0);
 
+  // setup renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
-
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -50,7 +52,7 @@ function init() {
     addObjectToScene(mesh, x, y);
   }
 
-  function addLinedGeometry(geometry, x, y) {
+  function addLineGeometry(geometry, x, y) {
     const material = new THREE.LineBasicMaterial({ color: 0xffffff });
     const mesh = new THREE.LineSegments(geometry, material);
     addObjectToScene(mesh, x, y);
@@ -63,10 +65,13 @@ function init() {
     objects.push(obj);
   }
 
-  light = new THREE.PointLight(0xFFFFFF, 2);
-  light.position.set(-240, 150, 0);
+  //setup light
+  light = new THREE.PointLight(0xFFFFFF, 2); //color
+  light.position.set(-240, 150, 0); //position
   scene.add(light);
 
+
+  // add "lamp"
   const helper = new THREE.PointLightHelper(light, 10);
   scene.add(helper);
 
@@ -83,6 +88,8 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+
+// rotation function
 function animate() {
   if (animationActive) {
     objects.forEach((obj) => {
@@ -98,9 +105,13 @@ function animate() {
     }
   }
   render();
+
+  // check rotation direction
   //checkRotation();
 }
 
+
+// listeners on DOM forms to control aanimation of objects
 function initDomFunc() {
   const animateButton = document.getElementById("animateButton");
   const cameraCheckbox = document.getElementById("camera");
@@ -141,22 +152,20 @@ function initDomFunc() {
 
 function initControl() {
   controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
+  controls.enableDamping = true; // "inertia"
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
   controls.minDistance = 100;
   controls.maxDistance = 800;
   controls.maxPolarAngle = Math.PI / 2;
   controls.addEventListener("change", render);
-
   controls.center = new THREE.Vector3(0, 0, 0);
 }
 
 
 
 
-// For control over camera rotation
-
+// switch between rotation directions
 
 // function checkRotation() {
 //   const rotSpeed = 0.9;
